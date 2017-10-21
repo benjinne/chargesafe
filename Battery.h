@@ -11,11 +11,12 @@ class Battery
     double getTotal();
     String getName();
   private:
-    char Name;
-    double Cell_1;
-    double Cell_2;
-    double Cell_3;
-    double Cell_4;
+    char thisName;
+    double cell_1;
+    double cell_2;
+    double cell_3;
+    double cell_4;
+    double total;
 };
 
 #endif
