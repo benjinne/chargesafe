@@ -16,7 +16,7 @@ Battery::Battery(char newName, double newCell_1, double newCell_2 , double newCe
   cell_2 = newCell_2;
   cell_3 = newCell_3;
   cell_4 = newCell_4;
-  total = Cell_1 + Cell_2 + Cell_3 + Cell_4;
+  total = cell_1 + cell_2 + cell_3 + cell_4;
 }
 
 double Battery::getTotal(){
