@@ -1,6 +1,6 @@
 #include "Arduino.h"
 
-int test(){
+int test(double * arr){
   unsigned long c1, c2, c3, c4;
   double v1, v2, v3, v4;
   double vpd = .0049; //volts per divison

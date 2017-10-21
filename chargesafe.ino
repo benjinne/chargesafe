@@ -1,6 +1,7 @@
 // include the library code:
 #include <LiquidCrystal.h>
 #include "Battery.h"
+#include "function.h"
 
 // initialize the LCD library with the numbers of the interface pins
 LiquidCrystal lcd(7, 8, 9, 10, 11, 12);
@@ -13,9 +14,12 @@ int analogPin0 = 0;
 const int ARRAYMAX = 10;
 int lastIndex;
 int displayIndex;
+double cells[4];
 Battery Batteries[ARRAYMAX];
 
 void setup() {
+  Serial.begin(9600); 
+  
   // set up the LCD's number of columns and rows:
   lcd.begin(16, 2);
   pinMode(buttonApin, INPUT_PULLUP);  
@@ -47,6 +51,10 @@ void addBattery(char Name, double Cell_1, double Cell_2 , double Cell_3, double 
 }
 
 void displayBattery(){
+  
+  test(cells);
+  Batteries[0] = Battery('A', cells[0], cells[1], cells[2], cells[3]);
+  
   Battery thisBattery = Batteries[displayIndex];
   lcd.setCursor(0, 0);
   lcd.print(thisBattery.getName() );
