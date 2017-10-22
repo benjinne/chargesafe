@@ -2,6 +2,7 @@
 #include <LiquidCrystal.h>
 #include "Battery.h"
 #include "getVoltages.h"
+#include "SortBatteries.h"
 
 // initialize the LCD library with the numbers of the interface pins
 LiquidCrystal lcd(7, 8, 9, 10, 11, 12);
@@ -13,10 +14,14 @@ bool next;
 const int ARRAYMAX = 10;
 int lastIndex;
 int displayIndex;
+int chargingIndex;
+String chargingMessage[2];
+bool charging;
 Battery Batteries[ARRAYMAX];
 // Use one char and letter++?
 char letters[26] = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W','X', 'Y', 'Z'};
 int state;
+double cellArr[4];
 
 void setup() {
   Serial.begin(9600); 
@@ -27,7 +32,10 @@ void setup() {
   pinMode(nextPin, INPUT_PULLUP);  
   lastIndex = 0;
   displayIndex = 0;
+  chargingIndex = 0;
   state = 0;
+  charging = false;
+  
 }
 
 void loop() {
@@ -50,8 +58,8 @@ void view(){
   else if(state == 1){
     lcd.setCursor(0, 0);
     lcd.print("Name = " + String(letters[lastIndex]) );
-    double arr[4];
-    double voltage = getVoltages(arr);
+    double voltage = getVoltages(cellArr);
+    ////////////////////////////////////////////////////Serial.println(analogRead(A0));
     lcd.setCursor(0,1);
     lcd.print(String(voltage) + " V");
     lcd.setCursor(11,1);
@@ -68,10 +76,18 @@ void view(){
     lcd.print("Next ->");
   }
   else if(state == 3){
-    lcd.setCursor(1, 0);
-    lcd.print("Charging!" );
-    lcd.setCursor(1, 1);
-    lcd.print("Stuff" );
+    lcd.setCursor(0, 0);
+    if(!charging)
+    {
+      lcd.print("Insert Battery " + Batteries[chargingIndex].getName());
+      lcd.setCursor(9,1);
+      lcd.print("Next ->");
+    }
+    else
+    {
+      lcd.print("Charging...");
+      chargerCheck();
+    }
   }
   else if(state == 4){
     lcd.setCursor(1, 0);
@@ -119,9 +135,14 @@ void doneHandler(){
     lastIndex = 0;
     displayIndex = 0;
   }
+  if(state == 3) { 
+    sortBatteries(Batteries, lastIndex);
+    popupMessage("Connect Charger!", 5000); 
+    }
 }
 
 void nextHandler(){
+  // Measure
   if (state == 1){
     if(lastIndex < ARRAYMAX){
       double cells[4];
@@ -133,9 +154,21 @@ void nextHandler(){
       popupMessage("Not Saved, Full!", 1000);
     }
   }
+  
+  // View
   else if(state == 2){
     if(displayIndex < lastIndex-1){displayIndex++;}
     else { displayIndex = 0; }
+  }
+  
+  // Charge
+  else if(state == 3){
+    if(charging){
+      //charging = false;
+    }else if (!charging){
+      charging = true;
+      chargingIndex++;
+    }
   }
 }
 
@@ -151,6 +184,15 @@ void popupMessage(String message, int delayMs){
   lcd.print(message);
   delay(delayMs);
   lcd.clear();
+}
+
+void chargerCheck()
+{
+  double arr[4];
+  double total = Batteries[chargingIndex].getTotal();
+  if(getVoltages(arr) > total - 0.2 && getVoltages(arr) < total + 0.2){
+      charging = false;
+  }
 }
 
 

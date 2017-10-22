@@ -23,13 +23,10 @@ double getVoltages(double * arr){
   v3 = 3*(c3-4)*vpd - v2 - v1;
   v4 = 4*(c4+10)*vpd - v3 - v2 - v1;
 
-  // FIX
-  arr[0] = 3; //v1;
-  arr[1] = 3; //v2;
-  arr[2] = 3; //v3;
-  arr[3] = 3; //v4;
-
-  
+  arr[0] = v1;
+  arr[1] = v2;
+  arr[2] = v3;
+  arr[3] = v4;
 
   Serial.print(v1);
   Serial.print("   -    ");
@@ -39,9 +36,7 @@ double getVoltages(double * arr){
   Serial.print("   -    ");
   Serial.println(v4);
 
-  // FIX
-  //return v1+v3+v3+v4;
-  return 3+3+3+3;
+  return v1+v3+v3+v4;
       
 }
 
