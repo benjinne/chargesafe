@@ -1,12 +1,16 @@
 #include "Arduino.h"
 
 double getVoltages(double * arr){
-  unsigned long c1, c2, c3, c4;
+  unsigned long c1 =0;
+  unsigned long c2 = 0;
+  unsigned long c3 = 0;
+  unsigned long c4 = 0;
   double v1, v2, v3, v4;
   double vpd = .0049; //volts per divison
   int numAvgs = 20;
   
   for(int i=0; i<numAvgs; i++){
+    Serial.println(c1);
     c1 += analogRead(A0);
     c2 += analogRead(A1);
     c3 += analogRead(A2);
@@ -28,13 +32,13 @@ double getVoltages(double * arr){
   arr[2] = v3;
   arr[3] = v4;
 
-  Serial.print(v1);
-  Serial.print("   -    ");
-  Serial.print(v2);
-  Serial.print("   -    ");
-  Serial.print(v3);
-  Serial.print("   -    ");
-  Serial.println(v4);
+//  Serial.print(v1);
+//  Serial.print("   -    ");
+//  Serial.print(v2);
+//  Serial.print("   -    ");
+//  Serial.print(v3);
+//  Serial.print("   -    ");
+//  Serial.println(v4);
 
   return v1+v3+v3+v4;
       
